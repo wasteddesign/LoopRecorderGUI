@@ -1,0 +1,103 @@
+﻿<UserControl 
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:l="clr-namespace:LoopRecorder.GUI"
+    
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="LoopRecorder.GUI.LoopRecorderGUI"
+    
+    UseLayoutRounding="True" TextOptions.TextFormattingMode="Display"
+           
+    d:DesignWidth="150.27" d:DesignHeight="256.935"
+        
+    >
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="VUMeterBorderBrush" Color="Gray"/>
+        <Color x:Key="VUMeterBackgroundColor">#333</Color>
+
+        <LinearGradientBrush x:Key="VUMeterBrush" StartPoint="0,0" EndPoint="1,0">
+            <GradientStop Color="#0F0" Offset="0.0"/>
+            <GradientStop Color="#FF0" Offset="0.75"/>
+            <GradientStop Color="#F00" Offset="1.0"/>
+        </LinearGradientBrush>
+
+    </UserControl.Resources>
+
+    <Grid Margin="0,0,0,8" x:Name="grid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Orientation="Horizontal">
+            <Button Width="50" Height="22" Command="{Binding BrowseCommand}" IsEnabled="{Binding SettingsGUIEnabled}" Content="Browse..."/>
+            <TextBlock Margin="4,0,0,0" VerticalAlignment="Center" Text="{Binding OutputPath}"/>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,4,0,0">
+            <CheckBox Content="Write To Wavetable" VerticalAlignment="Center" Margin="0,0,8,0" IsChecked="{Binding IsSelectedWriteToWavetable}" IsEnabled="{Binding SettingsGUIEnabled}"></CheckBox>
+            <CheckBox Content="Overwrite" VerticalAlignment="Center" Margin="0,0,8,0" IsChecked="{Binding IsSelectedOverwrite}" IsEnabled="{Binding SettingsGUIEnabled}"></CheckBox>
+            <CheckBox Content="Record Immediately From Current Position When Play Pressed" VerticalAlignment="Center" Margin="0,0,8,0" IsChecked="{Binding IsRecordImmediately}" IsEnabled="{Binding SettingsGUIEnabled}"></CheckBox>
+            <CheckBox Content="Record To Loop End (Ignore Length)" VerticalAlignment="Center" Margin="0,0,8,0" IsChecked="{Binding IsRecordToLoopEnd}" IsEnabled="{Binding SettingsGUIEnabled}"></CheckBox>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.Column="0" VerticalAlignment="Center" ToolTip="Wavetable Index" Content="Wavetable Index:" />
+                <TextBox Grid.Column="1" Margin="4,0,0,0" Width="30" Height="22" Text="{Binding WavetableIndex}" IsEnabled="{Binding SettingsGUIEnabled}" HorizontalAlignment="Left"/>
+            </Grid>
+            
+            <!-- <TextBox Margin="4,0,0,0" Width="30" Height="22" Text="{Binding LoopLength}" IsEnabled="{Binding SettingsGUIEnabled}"/>
+            <Button Margin="8,0,0,0" Width="50" Height="22" Command="{Binding StartStopCommand}" Content="{Binding StartStopButtonText}"/>
+                -->
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,4,0,0">
+            <Label VerticalAlignment="Center" ToolTip="Loop length in ticks" Content="Length:" />
+            <TextBox Margin="4,0,0,0" Width="40" Height="22" Text="{Binding LoopLength}" IsEnabled="{Binding SettingsGUIEnabled}"/>
+            <Button Margin="8,0,0,0" Width="50" Height="22" Command="{Binding StartStopCommand}" Content="{Binding StartStopButtonText}"/>
+        </StackPanel>
+
+        <ListBox Grid.Row="3" x:Name="connectionList" ItemsSource="{Binding}" Height="200" Margin="0,4,0,0">
+            
+            <ListBox.Style>
+                <Style TargetType="{x:Type ListBox}">
+                    <Setter Property="Background" Value="#333"/>
+                </Style>
+            </ListBox.Style>
+            
+            <ListBox.ItemTemplate>
+                <HierarchicalDataTemplate>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="100"/>
+                        </Grid.ColumnDefinitions>
+
+                        <CheckBox Content="{Binding Name}" IsChecked="{Binding IsSelected}" Foreground="{Binding NameBrush}"/>
+
+                        <Border Visibility="{Binding VUMeterVisibility}" Grid.Column="1" Height="11" BorderBrush="{StaticResource VUMeterBorderBrush}" BorderThickness="1" VerticalAlignment="Center" CornerRadius="0">
+                            <Grid x:Name="grid">
+                                <Rectangle Fill="{StaticResource VUMeterBrush}"/>
+                                <Rectangle>
+                                    <Rectangle.Fill>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                            <GradientStop Color="Transparent" Offset="0"/>
+                                            <GradientStop Color="Transparent" Offset="{Binding VUMeterLevel}"/>
+                                            <GradientStop Color="{StaticResource VUMeterBackgroundColor}" Offset="{Binding VUMeterLevel}"/>
+                                        </LinearGradientBrush>
+                                    </Rectangle.Fill>
+                                </Rectangle>
+                            </Grid>
+                        </Border>
+
+                    </Grid>
+
+                </HierarchicalDataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+    </Grid>
+</UserControl>
